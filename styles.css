@@ -6,3 +6,103 @@ available in the app when your plugin is enabled.
 If your plugin does not need CSS, delete this file.
 
 */
+
+/* Card container with grid layout */
+.bases-card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+  padding: 16px;
+}
+
+/* Card styling */
+.bases-card {
+  background: var(--background-primary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  aspect-ratio: 4/3;
+  text-decoration: none;
+  color: inherit;
+}
+
+.bases-card:hover {
+  text-decoration: none;
+  color: inherit;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+/* Card header */
+.bases-card-header {
+  padding: 8px;
+  border-top: 1px solid var(--background-modifier-border);
+}
+
+.bases-card-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-decoration: none;
+  display: block;
+}
+
+/* Card body */
+.bases-card-body {
+  height: 100%;
+  min-height: 120px;
+}
+
+/* Card preview text */
+.bases-card-preview {
+  padding: 8px;
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  overflow: hidden;
+  display: -webkit-box;
+  /* -webkit-line-clamp: 4; */
+  -webkit-box-orient: vertical;
+}
+
+/* Image container */
+.bases-card-image-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Card image */
+.bases-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .bases-card-container {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px;
+    padding: 15px;
+  }
+  
+  .bases-card-header,
+  .bases-card-body {
+    padding: 12px;
+  }
+  
+  .bases-card-title {
+    font-size: 14px;
+  }
+  
+  .bases-card-preview {
+    font-size: 13px;
+  }
+}
