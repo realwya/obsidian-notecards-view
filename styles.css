@@ -11,8 +11,8 @@ If your plugin does not need CSS, delete this file.
 .bases-card-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 16px;
-  padding: 16px;
+  gap: 12px;
+  padding: 12px;
 }
 
 /* Card styling */
@@ -39,11 +39,11 @@ If your plugin does not need CSS, delete this file.
 /* Card header */
 .bases-card-header {
   padding: 8px;
-  border-top: 1px solid var(--background-modifier-border);
+  border-bottom: 1px solid var(--background-modifier-border);
 }
 
 .bases-card-title {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--text-primary);
   text-decoration: none;
@@ -53,19 +53,66 @@ If your plugin does not need CSS, delete this file.
 /* Card body */
 .bases-card-body {
   height: 100%;
-  min-height: 120px;
+  min-height: 140px;
 }
 
 /* Card preview text */
 .bases-card-preview {
-  padding: 8px;
   font-size: 14px;
   color: var(--text-muted);
   line-height: 1.5;
   overflow: hidden;
   display: -webkit-box;
-  /* -webkit-line-clamp: 4; */
+  -webkit-line-clamp: 8;
   -webkit-box-orient: vertical;
+  height: 100%;
+}
+
+/* Markdown rendered preview */
+.bases-card-markdown-preview {
+  font-size: 14px;
+  color: var(--text-primary);
+  line-height: 1.5;
+  overflow: hidden;
+  height: 100%;
+  display: -webkit-box;
+  -webkit-line-clamp: 8;
+  -webkit-box-orient: vertical;
+  padding: 8px;
+}
+
+/* Markdown styles for preview */
+.bases-card-markdown-preview h1,
+.bases-card-markdown-preview h2,
+.bases-card-markdown-preview h3,
+.bases-card-markdown-preview h4,
+.bases-card-markdown-preview h5,
+.bases-card-markdown-preview h6 {
+  margin: 0 0 8px 0;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.bases-card-markdown-preview h1 {
+  font-size: 16px;
+}
+
+.bases-card-markdown-preview h2 {
+  font-size: 15px;
+}
+
+.bases-card-markdown-preview h3 {
+  font-size: 14px;
+}
+
+.bases-card-markdown-preview p {
+  margin: 0 0 8px 0;
+}
+
+.bases-card-markdown-preview br {
+  content: "";
+  margin: 8px 0;
+  display: block;
 }
 
 /* Image container */

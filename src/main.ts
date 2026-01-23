@@ -1,4 +1,4 @@
-import {App, Editor, MarkdownView, Modal, Notice, Plugin, BasesView, QueryController, HoverPopover, HoverParent, Keymap} from 'obsidian';
+import {App, Editor, MarkdownView, Modal, Notice, Plugin, BasesView, QueryController, HoverPopover, HoverParent, Keymap, MarkdownRenderer} from 'obsidian';
 import {DEFAULT_SETTINGS, MyPluginSettings, SampleSettingTab} from "./settings";
 
 // Remember to rename these classes and interfaces!
@@ -26,8 +26,8 @@ export default class NotesCardPlugin extends Plugin {
 
 		// Tell Obsidian about the new view type that this plugin provides.
 		this.registerBasesView(ExampleViewType, {
-      		name: 'Example',
-      		icon: 'lucide-graduation-cap',
+      		name: 'Note Cards',
+      		icon: 'lucide-file-text',
       		factory: (controller, containerEl) => new MyBasesView(controller, containerEl),
 			options: () => ([
         {
@@ -104,7 +104,12 @@ export class MyBasesView extends BasesView implements HoverParent {
             });
           });
 
-		  // Create card body for preview
+		  // Create card header with file name
+          const cardHeaderEl = cardEl.createDiv('bases-card-header');
+          const titleEl = cardHeaderEl.createDiv('bases-card-title');
+          titleEl.setText(fileName);
+          
+          // Create card body for preview
           const cardBodyEl = cardEl.createDiv('bases-card-body');
           
           // Read file content for preview
@@ -115,20 +120,21 @@ export class MyBasesView extends BasesView implements HoverParent {
               // Display image preview
               this.displayImagePreview(cardBodyEl, firstImage, app);
             } else {
-              // Create preview text, limit length
-              const previewText = this.getPreviewText(content);
-              const previewEl = cardBodyEl.createDiv('bases-card-preview');
-              previewEl.setText(previewText);
+              // Create markdown rendered preview
+              const previewEl = cardBodyEl.createDiv('bases-card-markdown-preview');
+              // Render markdown content, ignoring frontmatter
+              let cleanContent = content;
+              const frontmatterMatch = content.match(/^---[\s\S]*?---\n/);
+              if (frontmatterMatch) {
+                cleanContent = content.replace(frontmatterMatch[0], '');
+              }
+              // Render markdown to HTML
+              MarkdownRenderer.renderMarkdown(cleanContent, previewEl, entry.file.path, this);
             }
           }).catch(err => {
             const previewEl = cardBodyEl.createDiv('bases-card-preview');
             previewEl.setText('无法读取文件内容');
           });
-          
-          // Create card header with file name
-          const cardHeaderEl = cardEl.createDiv('bases-card-header');
-          const titleEl = cardHeaderEl.createDiv('bases-card-title');
-          titleEl.setText(fileName);
 
           
       }
