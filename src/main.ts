@@ -110,7 +110,7 @@ export class MyBasesView extends BasesView implements HoverParent {
           }
         }).catch(err => {
           const previewEl = cardBodyEl.createDiv('bases-card-preview');
-          previewEl.setText('无法读取文件内容');
+          previewEl.setText('cannot read file content');
         });
       }
     }
@@ -150,15 +150,15 @@ export class MyBasesView extends BasesView implements HoverParent {
         const blob = new Blob([arrayBuffer]);
         const url = URL.createObjectURL(blob);
         imgEl.src = url;
-        imgEl.alt = '预览图片';
+        imgEl.alt = 'image preview';
       }).catch(err => {
         const errorEl = imageContainerEl.createDiv('bases-card-preview');
-        errorEl.setText('无法加载图片');
+        errorEl.setText('cannot load image');
       });
     } else {
       // If image not found, show text preview
       const errorEl = imageContainerEl.createDiv('bases-card-preview');
-      errorEl.setText('图片未找到');
+      errorEl.setText('image not found');
     }
   }
 }
