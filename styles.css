@@ -10,7 +10,7 @@ If your plugin does not need CSS, delete this file.
 /* Card container with grid layout */
 .bases-card-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 12px;
   padding: 12px;
 }
@@ -33,7 +33,7 @@ If your plugin does not need CSS, delete this file.
 .bases-card:hover {
   text-decoration: none;
   color: inherit;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  border-color: hsl(0, 0%, 75%);
 }
 
 /* Card header */
@@ -63,7 +63,8 @@ If your plugin does not need CSS, delete this file.
   line-height: 1.5;
   overflow: hidden;
   display: -webkit-box;
-  -webkit-line-clamp: 8;
+  -webkit-line-clamp: 15;
+  line-clamp: 15;
   -webkit-box-orient: vertical;
   height: 100%;
 }
@@ -76,9 +77,11 @@ If your plugin does not need CSS, delete this file.
   overflow: hidden;
   height: 100%;
   display: -webkit-box;
-  -webkit-line-clamp: 8;
+  -webkit-line-clamp: 15;
+  line-clamp: 15;
   -webkit-box-orient: vertical;
   padding: 8px;
+  background-color: hsl(0, 0%, 99%);
 }
 
 /* Markdown styles for preview */
@@ -133,7 +136,7 @@ If your plugin does not need CSS, delete this file.
 }
 
 /* Responsive adjustments */
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
   .bases-card-container {
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 15px;
@@ -152,4 +155,4 @@ If your plugin does not need CSS, delete this file.
   .bases-card-preview {
     font-size: 13px;
   }
-}
+} */
