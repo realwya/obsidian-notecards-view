@@ -1,4 +1,4 @@
-import {App, Plugin, BasesView, QueryController, HoverPopover, HoverParent, Keymap, MarkdownRenderer} from 'obsidian';
+import {App, Plugin, BasesView, QueryController, HoverPopover, HoverParent, Keymap, MarkdownRenderer, TFile} from 'obsidian';
 
 // Remember to rename these classes and interfaces!
 export const NotecardsViewType = 'notecards-view';
@@ -90,50 +90,85 @@ export class MyBasesView extends BasesView implements HoverParent {
         const cardBodyEl = cardEl.createDiv('bases-card-body');
         
         // Read file content for preview
-        app.vault.read(entry.file).then(content => {
+        void app.vault.read(entry.file).then(content => {
           // Check if there are any images in the content
-          const firstImage = this.getFirstImagePath(content);
-          if (firstImage) {
-            // Display image preview
-            this.displayImagePreview(cardBodyEl, firstImage, app);
+          const imagePaths = this.getAllImagePaths(content);
+          if (imagePaths.length > 0) {
+            // Try to display image preview with fallback to markdown
+            void this.displayImagePreview(cardBodyEl, imagePaths, app, content, entry.file.path);
           } else {
             // Create markdown rendered preview
-            const previewEl = cardBodyEl.createDiv('bases-card-markdown-preview');
-            // Render markdown content, ignoring frontmatter
-            let cleanContent = content;
-            const frontmatterMatch = content.match(/^---[\s\S]*?---\n/);
-            if (frontmatterMatch) {
-              cleanContent = content.replace(frontmatterMatch[0], '');
-            }
-            // Render markdown to HTML
-            MarkdownRenderer.renderMarkdown(cleanContent, previewEl, entry.file.path, this);
+            this.displayMarkdownPreview(cardBodyEl, content, entry.file.path);
           }
-        }).catch(err => {
+        }).catch(() => {
           const previewEl = cardBodyEl.createDiv('bases-card-preview');
-          previewEl.setText('cannot read file content');
+          previewEl.setText('Cannot read file content');
         });
       }
     }
   }
 
-  // Helper method to get the first image path from content
-  private getFirstImagePath(content: string): string | null {
+  // Helper method to get all image paths from content
+  private getAllImagePaths(content: string): string[] {
     // Match Obsidian image links: ![[image.png]]
-    const imageMatch = content.match(/!\[\[(.*?)\]\]/);
-    if (imageMatch && imageMatch[1]) {
-      return imageMatch[1].trim();
+    const regex = /!\[\[(.*?)\]\]/g;
+    const imagePaths: string[] = [];
+    let match;
+    while ((match = regex.exec(content)) !== null) {
+      if (match[1]) {
+        imagePaths.push(match[1].trim());
+      }
     }
-    return null;
+    return imagePaths;
   }
 
-  // Helper method to display image preview
-  private displayImagePreview(cardBodyEl: HTMLElement, imagePath: string, app: App): void {
+  // Helper method to display markdown preview
+  private displayMarkdownPreview(
+    cardBodyEl: HTMLElement,
+    content: string,
+    filePath: string
+  ): void {
+    const previewEl = cardBodyEl.createDiv('bases-card-markdown-preview');
+    // Render markdown content, ignoring frontmatter
+    let cleanContent = content;
+    const frontmatterMatch = content.match(/^---[\s\S]*?---\n/);
+    if (frontmatterMatch) {
+      cleanContent = content.replace(frontmatterMatch[0], '');
+    }
+    // Render markdown to HTML
+    void MarkdownRenderer.render(this.app, cleanContent, previewEl, filePath, this);
+  }
+
+  // Helper method to display image preview with fallback
+  private async displayImagePreview(
+    cardBodyEl: HTMLElement,
+    imagePaths: string[],
+    app: App,
+    content: string,
+    filePath: string
+  ): Promise<void> {
+    for (const imagePath of imagePaths) {
+      const success = await this.tryLoadImage(cardBodyEl, imagePath, app);
+      if (success) {
+        return;
+      }
+    }
+    // If no image was successfully loaded, display markdown preview
+    this.displayMarkdownPreview(cardBodyEl, content, filePath);
+  }
+
+  // Helper method to try loading a single image
+  private async tryLoadImage(
+    cardBodyEl: HTMLElement,
+    imagePath: string,
+    app: App
+  ): Promise<boolean> {
     const imageContainerEl = cardBodyEl.createDiv('bases-card-image-container');
     const imgEl = imageContainerEl.createEl('img', 'bases-card-image');
-    
+
     // Try to get the image file
     let imageFile = app.vault.getAbstractFileByPath(imagePath);
-    
+
     // If not found, try to find by name
     if (!imageFile) {
       const files = app.vault.getFiles();
@@ -142,23 +177,26 @@ export class MyBasesView extends BasesView implements HoverParent {
         imageFile = foundFile;
       }
     }
-    
+
     // Check if it's a file
-    if (imageFile && 'extension' in imageFile) {
-      // Create a data URL for the image
-      app.vault.readBinary(imageFile as any).then(arrayBuffer => {
+    if (imageFile && imageFile instanceof TFile) {
+      try {
+        const arrayBuffer = await app.vault.readBinary(imageFile);
         const blob = new Blob([arrayBuffer]);
         const url = URL.createObjectURL(blob);
         imgEl.src = url;
         imgEl.alt = 'image preview';
-      }).catch(err => {
-        const errorEl = imageContainerEl.createDiv('bases-card-preview');
-        errorEl.setText('cannot load image');
-      });
+        return true;
+      } catch {
+        // Image load failed, try next image
+        imageContainerEl.remove();
+        return false;
+      }
     } else {
-      // If image not found, show text preview
-      const errorEl = imageContainerEl.createDiv('bases-card-preview');
-      errorEl.setText('image not found');
+      // Image not found, try next image
+      imageContainerEl.remove();
+      return false;
     }
   }
+
 }
