@@ -1,24 +1,14 @@
-import {App, Plugin, BasesView, QueryController, HoverPopover, HoverParent, Keymap, MarkdownRenderer, TFile} from 'obsidian';
+import {Plugin, BasesView, QueryController, HoverPopover, HoverParent, Keymap, MarkdownRenderer, TFile} from 'obsidian';
 
-// Remember to rename these classes and interfaces!
 export const NotecardsViewType = 'notecards-view';
 
 export default class NotecardsViewPlugin extends Plugin {
 
 	async onload() {
-		// Tell Obsidian about the new view type that this plugin provides.
 		this.registerBasesView(NotecardsViewType, {
       		name: 'Notecards',
       		icon: 'lucide-file-text',
       		factory: (controller, containerEl) => new MyBasesView(controller, containerEl),
-		// 	options: () => ([
-    //     {
-    //       type: 'text',
-    //       displayName: 'Property separator',
-    //       key: 'separator',
-    //       default: ' - ',
-    //     },
-    // ]),
     	});
 	}
 
@@ -56,11 +46,10 @@ export class MyBasesView extends BasesView implements HoverParent {
         
         // Create card as a link element
         const cardEl = cardContainerEl.createEl('a', 'bases-card');
-        
+
         // Get file name
         const fileName = String(entry.file.name).replace(/\.md$/, '');
 
-        
         // Add click event to open file
         cardEl.onClickEvent((evt) => {
           if (evt.button !== 0 && evt.button !== 1) return;
@@ -95,7 +84,7 @@ export class MyBasesView extends BasesView implements HoverParent {
           const imagePaths = this.getAllImagePaths(content);
           if (imagePaths.length > 0) {
             // Try to display image preview with fallback to markdown
-            void this.displayImagePreview(cardBodyEl, imagePaths, app, content, entry.file.path);
+            void this.displayImagePreview(cardBodyEl, imagePaths, content, entry.file.path);
           } else {
             // Create markdown rendered preview
             this.displayMarkdownPreview(cardBodyEl, content, entry.file.path);
@@ -143,12 +132,11 @@ export class MyBasesView extends BasesView implements HoverParent {
   private async displayImagePreview(
     cardBodyEl: HTMLElement,
     imagePaths: string[],
-    app: App,
     content: string,
     filePath: string
   ): Promise<void> {
     for (const imagePath of imagePaths) {
-      const success = await this.tryLoadImage(cardBodyEl, imagePath, app);
+      const success = await this.tryLoadImage(cardBodyEl, imagePath);
       if (success) {
         return;
       }
@@ -160,18 +148,17 @@ export class MyBasesView extends BasesView implements HoverParent {
   // Helper method to try loading a single image
   private async tryLoadImage(
     cardBodyEl: HTMLElement,
-    imagePath: string,
-    app: App
+    imagePath: string
   ): Promise<boolean> {
     const imageContainerEl = cardBodyEl.createDiv('bases-card-image-container');
     const imgEl = imageContainerEl.createEl('img', 'bases-card-image');
 
     // Try to get the image file
-    let imageFile = app.vault.getAbstractFileByPath(imagePath);
+    let imageFile = this.app.vault.getAbstractFileByPath(imagePath);
 
     // If not found, try to find by name
     if (!imageFile) {
-      const files = app.vault.getFiles();
+      const files = this.app.vault.getFiles();
       const foundFile = files.find(file => file.name === imagePath);
       if (foundFile) {
         imageFile = foundFile;
@@ -181,7 +168,7 @@ export class MyBasesView extends BasesView implements HoverParent {
     // Check if it's a file
     if (imageFile && imageFile instanceof TFile) {
       try {
-        const arrayBuffer = await app.vault.readBinary(imageFile);
+        const arrayBuffer = await this.app.vault.readBinary(imageFile);
         const blob = new Blob([arrayBuffer]);
         const url = URL.createObjectURL(blob);
         imgEl.src = url;

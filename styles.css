@@ -56,19 +56,6 @@ If your plugin does not need CSS, delete this file.
   min-height: 140px;
 }
 
-/* Card preview text */
-.bases-card-preview {
-  font-size: 14px;
-  color: var(--text-muted);
-  line-height: 1.5;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 15;
-  line-clamp: 15;
-  -webkit-box-orient: vertical;
-  height: 100%;
-}
-
 /* Markdown rendered preview */
 .bases-card-markdown-preview {
   font-size: 14px;
@@ -81,7 +68,6 @@ If your plugin does not need CSS, delete this file.
   line-clamp: 15;
   -webkit-box-orient: vertical;
   padding: 8px;
-  background-color: hsl(0, 0%, 99%);
 }
 
 /* Markdown styles for preview */
@@ -112,12 +98,6 @@ If your plugin does not need CSS, delete this file.
   margin: 0 0 8px 0;
 }
 
-.bases-card-markdown-preview br {
-  content: "";
-  margin: 8px 0;
-  display: block;
-}
-
 /* Image container */
 .bases-card-image-container {
   width: 100%;
@@ -134,25 +114,3 @@ If your plugin does not need CSS, delete this file.
   height: 100%;
   object-fit: cover;
 }
-
-/* Responsive adjustments */
-/* @media (max-width: 768px) {
-  .bases-card-container {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 15px;
-    padding: 15px;
-  }
-  
-  .bases-card-header,
-  .bases-card-body {
-    padding: 12px;
-  }
-  
-  .bases-card-title {
-    font-size: 14px;
-  }
-  
-  .bases-card-preview {
-    font-size: 13px;
-  }
-} */
