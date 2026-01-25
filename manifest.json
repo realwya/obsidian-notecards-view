@@ -3,9 +3,9 @@
 	"name": "Notecards View",
 	"version": "1.0.1",
 	"minAppVersion": "0.15.0",
-	"description": "Demonstrates some of the capabilities of the Obsidian API.",
-	"author": "Obsidian",
-	"authorUrl": "https://obsidian.md",
-	"fundingUrl": "https://obsidian.md/pricing",
+	"description": "Add a new base view for showing note cards.",
+	"author": "Eddie Wen",
+	"authorUrl": "https://wya.framer.wiki/",
+	"fundingUrl": "https://wya.framer.wiki/",
 	"isDesktopOnly": false
 }
