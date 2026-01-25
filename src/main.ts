@@ -20,11 +20,21 @@ export class MyBasesView extends BasesView implements HoverParent {
   readonly type = NotecardsViewType;
   hoverPopover: HoverPopover | null;
   private containerEl: HTMLElement;
+  private createdObjectUrls: string[] = [];
 
   constructor(controller: QueryController, parentEl: HTMLElement) {
     super(controller);
     this.containerEl = parentEl.createDiv('bases-notecards-view-container');
     this.hoverPopover = null;
+    this.createdObjectUrls = [];
+  }
+
+  onClose() {
+    // Clean up created object URLs to prevent memory leaks
+    this.createdObjectUrls.forEach(url => {
+      URL.revokeObjectURL(url);
+    });
+    this.createdObjectUrls = [];
   }
 
   public onDataUpdated(): void {
@@ -59,8 +69,8 @@ export class MyBasesView extends BasesView implements HoverParent {
           void app.workspace.openLinkText(path, '', modEvent);
         });
 
-        // Add hover event for file link
-        cardEl.addEventListener('mouseover', (evt) => {
+        // Add hover event for file link (use registerDomEvent to ensure cleanup)
+        this.registerDomEvent(cardEl, 'mouseover', (evt) => {
           app.workspace.trigger('hover-link', {
             event: evt,
             source: 'bases',
@@ -153,17 +163,8 @@ export class MyBasesView extends BasesView implements HoverParent {
     const imageContainerEl = cardBodyEl.createDiv('bases-card-image-container');
     const imgEl = imageContainerEl.createEl('img', 'bases-card-image');
 
-    // Try to get the image file
-    let imageFile = this.app.vault.getAbstractFileByPath(imagePath);
-
-    // If not found, try to find by name
-    if (!imageFile) {
-      const files = this.app.vault.getFiles();
-      const foundFile = files.find(file => file.name === imagePath);
-      if (foundFile) {
-        imageFile = foundFile;
-      }
-    }
+    // Try to get the image file by path only (avoid iterating all files)
+    const imageFile = this.app.vault.getAbstractFileByPath(imagePath);
 
     // Check if it's a file
     if (imageFile && imageFile instanceof TFile) {
@@ -171,6 +172,8 @@ export class MyBasesView extends BasesView implements HoverParent {
         const arrayBuffer = await this.app.vault.readBinary(imageFile);
         const blob = new Blob([arrayBuffer]);
         const url = URL.createObjectURL(blob);
+        // Track created object URLs for cleanup
+        this.createdObjectUrls.push(url);
         imgEl.src = url;
         imgEl.alt = 'image preview';
         return true;
