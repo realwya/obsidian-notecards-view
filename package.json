@@ -1,7 +1,7 @@
 {
-	"name": "obsidian-sample-plugin",
+	"name": "notecards-view",
 	"version": "1.0.1",
-	"description": "This is a sample plugin for Obsidian (https://obsidian.md)",
+	"description": "Add a new base view for showing note cards.",
 	"main": "main.js",
 	"type": "module",
 	"scripts": {

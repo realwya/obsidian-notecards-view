@@ -11,6 +11,7 @@ A plugin for Obsidian that adds a new base view type, "Notecards View", which di
 ### Manual Installation
 
 1. Download the latest release from the GitHub repository
-2. Extract the files to your vault's plugin folder: `VaultFolder/.obsidian/plugins/notecards/`
+2. Extract the files to your vault's plugin folder: `VaultFolder/.obsidian/plugins/`
 3. Restart Obsidian
 4. Enable the plugin in Settings → Community Plugins
+5. In your base file, click 'Add view' and select 'Notecards' in Layout dropdown menu.
