@@ -3,9 +3,8 @@
 	"name": "Notecards View",
 	"version": "1.0.2",
 	"minAppVersion": "0.15.0",
-	"description": "Add a new base view for showing note cards.",
+	"description": "Add a custom base view for showing note content on cards.",
 	"author": "Eddie Wen",
 	"authorUrl": "https://wya.framer.wiki/",
-	"fundingUrl": "https://wya.framer.wiki/",
 	"isDesktopOnly": false
 }
