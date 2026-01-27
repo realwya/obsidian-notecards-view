@@ -48,6 +48,9 @@ If your plugin does not need CSS, delete this file.
   color: var(--text-primary);
   text-decoration: none;
   display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Card body */

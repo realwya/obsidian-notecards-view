@@ -4,7 +4,7 @@ export const NotecardsViewType = 'notecards-view';
 
 export default class NotecardsViewPlugin extends Plugin {
 
-	async onload() {
+	onload() {
 		this.registerBasesView(NotecardsViewType, {
       		name: 'Notecards',
       		icon: 'lucide-file-text',
