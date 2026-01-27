@@ -80,13 +80,13 @@ export class MyBasesView extends BasesView implements HoverParent {
           });
         });
 
+        // Create card body for preview
+        const cardBodyEl = cardEl.createDiv('bases-card-body');
+
         // Create card header with file name
         const cardHeaderEl = cardEl.createDiv('bases-card-header');
         const titleEl = cardHeaderEl.createDiv('bases-card-title');
         titleEl.setText(fileName);
-        
-        // Create card body for preview
-        const cardBodyEl = cardEl.createDiv('bases-card-body');
         
         // Read file content for preview
         void app.vault.read(entry.file).then(content => {

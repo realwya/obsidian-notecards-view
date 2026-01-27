@@ -39,7 +39,7 @@ If your plugin does not need CSS, delete this file.
 /* Card header */
 .bases-card-header {
   padding: 8px;
-  border-bottom: 1px solid var(--background-modifier-border);
+  border-top: 1px solid var(--background-modifier-border);
 }
 
 .bases-card-title {
