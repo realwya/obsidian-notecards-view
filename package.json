@@ -1,7 +1,7 @@
 {
 	"name": "notecards-view",
 	"version": "1.0.2",
-	"description": "Add a new base view for showing note cards.",
+	"description": "Add a custom base view for showing note content on cards.",
 	"main": "main.js",
 	"type": "module",
 	"scripts": {
