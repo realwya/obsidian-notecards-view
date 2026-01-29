@@ -1,4 +1,4 @@
-import {Plugin, BasesView, QueryController, HoverPopover, HoverParent, Keymap, MarkdownRenderer, TFile} from 'obsidian';
+import {Plugin, BasesView, QueryController, HoverPopover, HoverParent, Keymap, MarkdownRenderer, TFile, NullValue, DateValue} from 'obsidian';
 
 export const NotecardsViewType = 'notecards-view';
 
@@ -43,6 +43,9 @@ export class MyBasesView extends BasesView implements HoverParent {
     // Clear entries created by previous iterations
     this.containerEl.empty();
 
+    // Get visible properties selected by the user
+    const visibleProperties = this.data.properties;
+
     // Create a card container with grid layout
     const cardContainerEl = this.containerEl.createDiv('bases-card-container');
 
@@ -53,12 +56,9 @@ export class MyBasesView extends BasesView implements HoverParent {
         if (!entry.file.path.endsWith('.md')) {
           continue;
         }
-        
+
         // Create card as a link element
         const cardEl = cardContainerEl.createEl('a', 'bases-card');
-
-        // Get file name
-        const fileName = String(entry.file.name).replace(/\.md$/, '');
 
         // Add click event to open file
         cardEl.onClickEvent((evt) => {
@@ -83,11 +83,53 @@ export class MyBasesView extends BasesView implements HoverParent {
         // Create card body for preview
         const cardBodyEl = cardEl.createDiv('bases-card-body');
 
-        // Create card header with file name
-        const cardHeaderEl = cardEl.createDiv('bases-card-header');
-        const titleEl = cardHeaderEl.createDiv('bases-card-title');
-        titleEl.setText(fileName);
-        
+        // Create card header if user has selected properties
+        let cardHeaderEl: HTMLElement | null = null;
+        if (visibleProperties.length > 0) {
+          cardHeaderEl = cardEl.createDiv('bases-card-header');
+
+          // Display each visible property in the header
+          for (const propertyId of visibleProperties) {
+            const value = entry.getValue(propertyId);
+
+            // Check if this is the file name property
+            if (propertyId === 'file.name') {
+              if (value && !(value instanceof NullValue)) {
+                // File name: display directly and bold
+                const propertyName = cardHeaderEl.createDiv();
+                propertyName.className = 'bases-card-property bases-card-file-name';
+                value.renderTo(propertyName, app.renderContext);
+              }
+            } else {
+              // Other properties: display name (small) and value (large on new line)
+              const propertyContainer = cardHeaderEl.createDiv('bases-card-property');
+
+              // Get display name for this property
+              const displayName = this.config.getDisplayName(propertyId);
+
+              // Property name (small font)
+              const nameEl = propertyContainer.createDiv('bases-card-property-name');
+              nameEl.setText(displayName);
+
+              // Property value (large font, on new line)
+              const valueEl = propertyContainer.createDiv('bases-card-property-value');
+
+              // Use isTruthy() to check for meaningful values
+              if (value && value.isTruthy()) {
+                // All types use the same renderTo() method
+                value.renderTo(valueEl, app.renderContext);
+                // Add CSS class only for date types (to hide input border)
+                if (value instanceof DateValue) {
+                  valueEl.addClass('bases-card-date-value');
+                }
+              } else {
+                // Empty value: display '—'
+                valueEl.setText('—');
+              }
+            }
+          }
+        }
+
         // Read file content for preview
         void app.vault.read(entry.file).then(content => {
           // Check if there are any images in the content
