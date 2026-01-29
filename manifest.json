@@ -1,7 +1,7 @@
 {
 	"id": "notecards-view",
 	"name": "Notecards View",
-	"version": "1.0.3",
+	"version": "1.1.0",
 	"minAppVersion": "0.15.0",
 	"description": "Add a custom base view for showing note content on cards.",
 	"author": "Eddie Wen",
