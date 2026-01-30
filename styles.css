@@ -64,7 +64,7 @@ If your plugin does not need CSS, delete this file.
   font-size: var(--font-ui-smaller);
   color: var(--text-faint);
   letter-spacing: 0.5px;
-  margin-top: 6px;
+  padding-top: 6px;
 }
 
 /* Property value (content) */
@@ -76,11 +76,7 @@ If your plugin does not need CSS, delete this file.
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;
-}
-
-/* Remove link styling from property values */
-.bases-card-property-value a {
-  text-decoration: none;
+  padding: 2px 0 2px 0;
 }
 
 /* Remove extra styling from rendered values */
