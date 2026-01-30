@@ -28,7 +28,7 @@ npm version $VERSION --no-git-tag-version
 
 # Step 2: Run version-bump script to update manifest.json and versions.json
 echo "📝 Updating manifest.json and versions.json..."
-node version-bump.mjs
+npm_package_version=$VERSION node version-bump.mjs
 
 # Step 3: Commit changes
 echo "💾 Committing version changes..."
