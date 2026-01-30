@@ -32,7 +32,7 @@ npm_package_version=$VERSION node version-bump.mjs
 
 # Step 3: Commit changes
 echo "💾 Committing version changes..."
-git add package.json manifest.json versions.json
+git add package.json package-lock.json manifest.json versions.json
 git commit -m "release $VERSION"
 
 # Step 4: Delete existing tag if it exists and create annotated tag
