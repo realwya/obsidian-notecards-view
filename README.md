@@ -1,7 +1,8 @@
 # Obsidian Notecards View Plugin
 
 A plugin for Obsidian that adds a new base view type, "Notecards View", which displays your notes as a grid of cards, providing a visual and organized way to browse your markdown files.
-![SCR-20260125-olbj](https://github.com/user-attachments/assets/c622f103-bb3d-4889-a98b-901ef428439e)
+![SCR-20260130-jpzf](https://github.com/user-attachments/assets/0ccc2ec2-1615-4749-9354-ee206fe68421)
+
 
 
 ## Features
