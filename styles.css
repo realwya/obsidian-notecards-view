@@ -41,15 +41,10 @@ If your plugin does not need CSS, delete this file.
   border-top: 1px solid var(--background-modifier-border);
   display: flex;
   flex-direction: column;
-  gap: 10px;
   /* Allow header to grow/shrink based on content */
   flex-shrink: 0;
 }
 
-/* Property item in header */
-.bases-card-property {
-  height: 40px;
-}
 
 /* File name styling - bold */
 .bases-card-file-name {
@@ -61,7 +56,7 @@ If your plugin does not need CSS, delete this file.
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;
-  height: 24px;
+  height: auto;
 }
 
 /* Property name (label) */
@@ -69,7 +64,7 @@ If your plugin does not need CSS, delete this file.
   font-size: var(--font-ui-smaller);
   color: var(--text-faint);
   letter-spacing: 0.5px;
-  margin-bottom: 2px;
+  margin-top: 6px;
 }
 
 /* Property value (content) */
